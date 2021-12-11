@@ -1,0 +1,65 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <title>
+        {% block title %}
+            {{ page_title|default:"Untitled Page" }}
+        {% endblock title %}</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #84bc00;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">PyPark</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'parking_space' %}">Meine Parkplätze</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">Meine Buchungen</a>
+            </li>
+              {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ request.user.username }}</a>
+                <div class="dropdown-menu">
+                    <a href="{% url 'password_change' %}" class="dropdown-item">Passwort ändern</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+                </div>
+                </li>
+              {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+        <div class="col-sm p-3">
+            <!-- content -->
+            {% block content %}
+			{% endblock %}
+        </div>
+
+
+<nav class="navbar fixed-bottom navbar-light bg-light">
+  <div class="container-fluid">
+      {% load settings %}
+      <a href={% url 'release_notes' %}>PyPark Version {% settings_value 'APP_VERSION' %}</a>
+  </div>
+</nav>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  </body>
+
+</html>

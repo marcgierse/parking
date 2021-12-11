@@ -1,0 +1,17 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Einloggen{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Einloggen</h3>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <p>Passwort vergessen? Dann hier <a href="{% url 'password_reset' %}">zurücksetzen</a>. Noch keinen Account? Dann hier <a href="{% url 'signup' %}">registrieren</a></p>
+    <div class="col-md-12 text-right">
+       <button type="submit" class="btn btn-success">Log In</button>
+    </div>
+</form>
+{% endblock %}

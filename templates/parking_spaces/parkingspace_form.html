@@ -1,0 +1,16 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Neuen Parkplatz anlegen{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Neuen Parkplatz anlegen</h3>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <div class="col-md-12 text-right">
+       <button type="submit" class="btn btn-success">Speichern</button>
+    </div>
+</form>
+{% endblock %}

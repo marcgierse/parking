@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Meine Parkplätze{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Meine Parkplätze</h3>
+{% if ps %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+                <th>Name</th>
+                <th>von</th>
+                <th>bis</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for parkingspace in ps %}
+              <tr>
+                  <td>{{ parkingspace.name }}</td>
+                  <td>{{ parkingspace.valid_from }}</td>
+                  <td>{{ parkingspace.valid_to }}</td>
+                  <td>
+                      <a class="btn btn-info btn-sm" href="{% url 'parking_space_edit' parking_space=parkingspace.id %}">
+                        <i class="bi bi-pen"></i>
+                      </a>
+                      <a class="btn btn-danger btn-sm" href="{% url 'parking_space_delete' parking_space=parkingspace.id %}">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                  </td>
+              </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Noch hast Du keine Parkplätze. Möchtest Du einen <a href="{% url 'parking_space_add' %}">anlegen</a>?</p>
+{% endif %}
+
+{% endblock %}

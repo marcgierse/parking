@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Übersicht Parkplätze{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h2>Übersicht</h2>
+  <p>Auf dieser Seite können Parkplätze gebucht und freigegeben werden:</p>
+
+  <div class="table-responsive">
+    <table class="table table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Parkplatz</th>
+          {% for d in dates %}
+              {% if d == today %}
+                  <th class="table-primary">{{ d|date:"D j.n." }}</th>
+              {% else %}
+                  <th>{{ d|date:"D j.n." }}</th>
+              {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for ps in spaces %}
+          <tr>
+            <td>{{ ps.parking_space_info.name }}</td>
+                {% for s in ps.status %}
+                    {% if s.status == "USED_OWNER" %}
+                        {% if s.action == "" %}
+                            <td>{{ ps.parking_space_info.owner.username }}</td>
+                        {% else %}
+                            <td><a class="btn btn-primary btn-sm" href="{% url 'free' date=s.date parking_space=ps.parking_space_info.id %}" role="button">Freigeben</a></td>
+                        {% endif %}
+                    {% elif s.status == "FREE" %}
+                        {% if s.action == "BOOK" %}
+                            <td><a class="btn btn-primary btn-sm" href="{% url 'book' date=s.date parking_space=ps.parking_space_info.id %}" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
+                        {% elif s.action == "DELETE" %}
+                            <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>Freigabe</a></td>
+                        {% else %}
+                            <td><a class="btn btn-primary btn-sm disabled" href="" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
+                        {% endif %}
+                    {% elif s.status == "USED_USER" %}
+                        {% if s.action == "RECLAIM" %}
+                            <td><a class="btn btn-warning btn-sm" href="{% url 'reclaim' date=s.date parking_space=ps.parking_space_info.id %}" role="button" title="Den Parkplatz von {{ s.latest_event.user.username }} zurückfordern.">{{ s.latest_event.user.username }} <i class="bi bi-x-circle"></i></a></td>
+                        {% elif s.action == "DELETE" %}
+                            <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>löschen</a></td>
+                        {% else %}
+                            <td>{{ s.latest_event.user.username }}</td>
+                        {% endif %}
+                    {% elif s.status == "INACTIVE" %}
+                        <td><a class="btn btn-danger btn-sm" title="Der Parkplatz steht noch nicht, oder nicht mehr zur Verfügung."><i class="bi bi-dash-circle"></i></a></td>
+                    {% endif %}
+                {% endfor %}
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if request.user.is_superuser %}
+
+    <p>
+  <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Debug
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+     <pre>
+         {% for ps in spaces %}
+            {{ ps | pprint }}
+         {% endfor %}
+     </pre>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}
