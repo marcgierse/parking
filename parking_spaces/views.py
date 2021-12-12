@@ -3,11 +3,10 @@ import logging.config
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 from .models import ParkingSpace, ParkingSpaceEvent
-from .forms import ParkingSpaceForm
+from .forms import ParkingSpaceForm, UserCreationFormWithMail
 import datetime
 
 from .provider import ParkingSpaceStatusProvider, get_list_of_relevant_dates
@@ -105,16 +104,16 @@ def delete_event(request, event_id):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserCreationFormWithMail(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            user = form.save()
+            # username = form.cleaned_data.get('username')
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('dashboard')
     else:
-        form = UserCreationForm()
+        form = UserCreationFormWithMail()
     return render(request, 'registration/signup.html', {'form': form})
 
 
