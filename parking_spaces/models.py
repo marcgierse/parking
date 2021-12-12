@@ -18,7 +18,7 @@ class ParkingSpace(models.Model):
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.owner})"
 
 
 class ParkingSpaceEvent(models.Model):
@@ -37,13 +37,14 @@ class ParkingSpaceEvent(models.Model):
     date = models.DateField()
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE, null=True, blank=True)
+        on_delete=models.CASCADE)
     deleted = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         if self.deleted:
-            return f"deleted-{self.parking_space.name} - {self.date} - {self.status}"
-        return f"{self.parking_space.name} - {self.date} - {self.status}"
+            return " - ".join(["deleted", self.parking_space.name, str(self.date), self.status, str(self.user)])
+        return " - ".join([self.parking_space.name, str(self.date), self.status, str(self.user)])
+
 

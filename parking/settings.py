@@ -29,6 +29,37 @@ DEBUG = False
 ALLOWED_HOSTS = ['parkplatz.gierse.tech', 'localhost', '81.169.218.230', '127.0.0.1']
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "..", "pypark.log"),
+            'when': 'midnight',
+            'backupCount': 21,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'file': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 # Application definition
 
 INSTALLED_APPS = [
