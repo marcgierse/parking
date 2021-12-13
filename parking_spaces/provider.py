@@ -48,11 +48,19 @@ class ParkingSpaceStatusProvider:
     def _user_already_has_a_parking_space_booked(self, date: datetime.date) -> bool:
         for ps in self.active_parking_spaces:
             if ps.owner_id == self.current_user.id:
-                return True
+                # Prüfe, ob der User seinen Parkplatz am betroffenen Tag angeboten hat. Falls ja, darf er prinzipiell
+                # einen anderen Platz buchen.
+                user_parking_space_is_free_query = ParkingSpaceEvent.objects.filter(user_id=self.current_user.id,
+                                                                                    date=date,
+                                                                                    parking_space_id=ps.id,
+                                                                                    status=ParkingSpaceEvent.FREE,
+                                                                                    deleted=False)
+                if not user_parking_space_is_free_query.exists():
+                    return True
 
-        query = ParkingSpaceEvent.objects.filter(user_id=self.current_user.id, deleted=False, date=date,
-                                                 status=ParkingSpaceEvent.BOOKED_BY_USER)
-        if len(query) > 0:
+        booked_by_user_query = ParkingSpaceEvent.objects.filter(user_id=self.current_user.id, deleted=False, date=date,
+                                                                status=ParkingSpaceEvent.BOOKED_BY_USER)
+        if booked_by_user_query.exists():
             return True
 
         return False
@@ -103,6 +111,7 @@ class ParkingSpaceStatusProvider:
             return ""
 
         current_user_is_owner = parking_space.owner_id == self.current_user.id
+        user_already_has_a_parking_space_booked = self._user_already_has_a_parking_space_booked(date)
         # None heißt keine Buchung -> Nur der Besitzer kann freigeben
         if current_status is None:
             if current_user_is_owner:
@@ -116,9 +125,14 @@ class ParkingSpaceStatusProvider:
         # falls die Freigabe erteilt wurde, kann jeder buchen, außer der Besitzer -> dieser kann die Freigabe löschen
         if current_status.status == ParkingSpaceEvent.FREE:
             if current_user_is_owner:
-                return "DELETE"
+                # Wenn wir anderweitig einen anderen Parkplatz gebucht haben, können wir die Freigabe nicht einfach
+                # löschen.
+                if user_already_has_a_parking_space_booked:
+                    return ""
+                else:
+                    return "DELETE"
             else:
-                if self._user_already_has_a_parking_space_booked(date):
+                if user_already_has_a_parking_space_booked:
                     return ""
                 else:
                     return "BOOK"
@@ -127,7 +141,12 @@ class ParkingSpaceStatusProvider:
         # freigaben - alle anderen können nichts tun.
         if current_status.status == ParkingSpaceEvent.BOOKED_BY_USER:
             if current_user_is_owner:
-                return "RECLAIM"
+                # Falls der Besitzer einen anderen Parkplatz gebucht hat, kann er den Platz nicht zurückfordern, dafür
+                # muss er zunächst den anderen Parkplatz aufgeben.
+                if user_already_has_a_parking_space_booked:
+                    return ""
+                else:
+                    return "RECLAIM"
             elif self.current_user.id == current_status.user_id:
                 return "DELETE"
             else:

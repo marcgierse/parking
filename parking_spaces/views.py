@@ -93,7 +93,7 @@ def booking(request, parking_space, date):
 
 @login_required()
 def delete_event(request, event_id):
-    print(f"{event_id}=")
+    log.info(f"Event mit {event_id=} mit Löschflag versehen durch User {request.user}")
 
     event = ParkingSpaceEvent.objects.get(id=event_id)
     event.deleted = True

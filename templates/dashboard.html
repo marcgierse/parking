@@ -7,7 +7,7 @@
   <p>Auf dieser Seite können Parkplätze gebucht und freigegeben werden:</p>
 
   <div class="table-responsive">
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered text-center align-middle">
       <thead>
         <tr>
           <th>Parkplatz</th>
@@ -23,7 +23,7 @@
       <tbody>
       {% for ps in spaces %}
           <tr>
-            <td>{{ ps.parking_space_info.name }}</td>
+            <td>{{ ps.parking_space_info.name }}<br>({{ ps.parking_space_info.owner }})</td>
                 {% for s in ps.status %}
                     {% if s.status == "USED_OWNER" %}
                         {% if s.action == "" %}
@@ -36,6 +36,8 @@
                             <td><a class="btn btn-primary btn-sm" href="{% url 'book' date=s.date parking_space=ps.parking_space_info.id %}" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
                         {% elif s.action == "DELETE" %}
                             <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>Freigabe</a></td>
+                        {% elif request.user == ps.parking_space_info.owner %}
+                            <td><a class="btn btn-danger btn-sm disabled" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>Freigabe</a></td>
                         {% else %}
                             <td><a class="btn btn-primary btn-sm disabled" href="" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
                         {% endif %}
