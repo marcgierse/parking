@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 from parking_spaces.views import dashboard_view, booking, freeing, delete_event, signup, release_notes, \
-    add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim
+    add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim, help
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', dashboard_view, name="dashboard"),
     path('parking_space', parkingspaces, name="parking_space"),
     path('parking_space/add', add_parkingspace, name="parking_space_add"),
@@ -32,5 +32,6 @@ urlpatterns = [
     path('parking_space_event/<int:event_id>/delete', delete_event, name="delete"),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup', signup, name="signup"),
+    path('hilfe', help, name="help"),
     path('release_notes', release_notes, name="release_notes"),
 ]

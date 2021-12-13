@@ -156,6 +156,7 @@ def edit_parkingspace(request, parking_space):
     return render(request, 'parking_spaces/parkingspace_form.html', {'form': form})
 
 
+@login_required()
 def delete_parkingspace(request, parking_space):
     log.info(f"setze Löschflag für {parking_space=}")
     ps = ParkingSpace.objects.get(pk=parking_space)
@@ -163,3 +164,7 @@ def delete_parkingspace(request, parking_space):
     ps.save()
 
     return redirect("parking_space")
+
+
+def help(request):
+    return render(request, 'help.html')

@@ -3,7 +3,6 @@
 {% block title %}Übersicht Parkplätze{% endblock %}
 
 {% block content %}
-<div class="container mt-3">
   <h2>Übersicht</h2>
   <p>Auf dieser Seite können Parkplätze gebucht und freigegeben werden:</p>
 
@@ -57,24 +56,4 @@
       </tbody>
     </table>
   </div>
-</div>
-
-{% if request.user.is_superuser %}
-
-    <p>
-  <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Debug
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-     <pre>
-         {% for ps in spaces %}
-            {{ ps | pprint }}
-         {% endfor %}
-     </pre>
-  </div>
-</div>
-
-{% endif %}
 {% endblock %}

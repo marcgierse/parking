@@ -1,0 +1,72 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Hilfe / Kurzanleitung{% endblock %}
+
+{% block content %}
+    <h3>Hilfe / Kurzanleitung</h3>
+    <p>Auf dieser Seite soll kurz die Grundidee der Parkplatzbörse erklärt werden. </p>
+    <ul>
+        <li>Wenn jemand einen Parkplatz der Börse zur Verfügung stellen möchte, können unter <a href="{% url 'parking_space' %}">Meine Parkplätze</a>
+        ein oder mehrere Parkplätze hinzugefügt werden.</li>
+    <li>Ein Parkplatz gehört grundsätzlich seinem Besitzer/seiner Besitzerin.</li>
+    <li>Pro Tag kann der Parkplatz freigegeben werden. Jeder andere Nutzer/jede andere Nutzerin der Börse kann diesen freigegebenen Platz dann buchen,
+        sofern er/sie an diesem Tag noch keinen anderen Parkplatz gebucht hat.</li>
+    <li>Der Besitzer/die Besitzerin eines Parkplatzes kann jederzeit die Freigabe zurückziehen. Das kann sowohl dann passieren,
+        wenn der Parkplatz als 'buchbar' in der Übersicht angezeigt wird, aber auch, wenn ein anderer Nutzer/eine andere Nutzerin der Börse
+        den Parkplatz bereits gebucht hat. In diesem Fall wird der Ausgangszustand wiederhergestellt und sowohl die Freigabe wie auch die Buchung werden
+        entsprechend gelöscht. <b>Aktuell wird über diesen Vorgang noch nicht informiert - bitte selbsständig der Nutzerin/dem Nutzer Bescheid geben.</b></li>
+    <li>Es können keine Buchungen für die Vergangenheit vorgenommen werden.</li>
+    <li>Aktuell gibt es folgende technische Limitierung: Wenn jemand einen Parkplatz besitzt, kann er keinen anderen Parkplatz buchen.</li>
+    </ul>
+
+    <h4>Was bedeuten die Symbole?</h4>
+    <p>Auf der <a href="{% url 'dashboard' %}">Übersichtsseite</a> tauchen je nach Zustand eines Parkplatzes verschiedene Buttons auf, die insgesamt folgende
+    Bedeutung haben:</p>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 12%; text-align: center">Symbol / Button</th>
+                    <th>Bedeutung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a class="btn btn-primary btn-sm">Freigaben</a></td>
+                    <td>Der Besitzer/die Besitzerin eines Parkplatzes kann pro Tag diesen freigeben.</td>
+                </tr>
+                <tr>
+                    <td><a class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Freigabe</a></td>
+                    <td>Eine erteilte Freigabe für einen Parkplatz kann von der Besitzerin/dem Besitzer wieder gelöscht werden.
+                        In diesem Fall war der Parkplatz noch nicht durch eine andere Nutzerin/einen anderen Nutzer gebucht.</td>
+                </tr>
+            <tr>
+                <td><a class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i> Buchen</a>
+                </td>
+                <td>Ein freigegebener Parkplatz kann gebucht werden.</td>
+            </tr>
+            <tr>
+                <td><a class="btn btn-primary btn-sm disabled"><i class="bi bi-pencil-square"></i> Buchen</a>
+                </td>
+                <td>Ein freigegebener Parkplatz kann nicht gebucht werden, wenn er in der Vergangenheit liegt.</td>
+            </tr>
+            <tr>
+                <td><a class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> löschen</a></td>
+                <td>Wenn ich einen Parkplatz gebucht habe, kann ich die Buchung so löschen. Der Parkplatz kann dann wieder
+                von allen anderen Nutzerinnen und Nutzern der Börse gebucht werden, so er/sie an diesem Tag noch keinen
+                anderen Parkplatz nutzt.</td>
+            </tr>
+            <tr>
+                <td><a class="btn btn-warning btn-sm">USERNAME <i class="bi bi-x-circle"></i></a></td>
+                <td>Wenn ein Parkplatz von einer Nutzerin/einem Nutzer gebucht wurde, hat die Besitzerin/der Besitzer auch dann noch
+                die Möglichkeit den Parkplatz zurückzufordern.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Wo gibt es den Quellcode?</h4>
+    <p>Der Quellcode ist auf GitHub veröffentlicht. Er kann <a href="https://github.com/marcgierse/parking">hier</a> eingesehen werden</p>
+
+{% endblock %}
