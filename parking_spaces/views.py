@@ -171,5 +171,5 @@ def delete_parkingspace(request, parking_space):
     return redirect("parking_space")
 
 
-def help(request):
+def help_page(request):
     return render(request, 'help.html')
