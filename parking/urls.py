@@ -20,7 +20,7 @@ from parking_spaces.views import dashboard_view, booking, freeing, delete_event,
     add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim, help
 
 urlpatterns = [
-    path('admin', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', dashboard_view, name="dashboard"),
     path('parking_space', parkingspaces, name="parking_space"),
     path('parking_space/add', add_parkingspace, name="parking_space_add"),
