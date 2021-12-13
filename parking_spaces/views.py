@@ -17,7 +17,7 @@ log = logging.getLogger('file')
 
 @login_required()
 def dashboard_view(request):
-    log.info("Generiere Übersicht für User")
+    log.info(f"Generiere Übersicht für User {request.user}")
     data_provider = ParkingSpaceStatusProvider(current_user=request.user)
     result = data_provider.load_data()
 
