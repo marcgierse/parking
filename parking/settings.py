@@ -142,13 +142,9 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'de-de'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = False
 
 
@@ -174,4 +170,4 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS"))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-APP_VERSION = '1.0.20211212'
+APP_VERSION = '1.0.20211213'

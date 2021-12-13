@@ -108,9 +108,12 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             # username = form.cleaned_data.get('username')
-            # raw_password = form.cleaned_data.get('password1')
+            raw_password = form.cleaned_data.get('password1')
+            user.set_password(raw_password)
+            user.save()
             # user = authenticate(username=username, password=raw_password)
             login(request, user)
+
             return redirect('dashboard')
     else:
         form = UserCreationFormWithMail()
