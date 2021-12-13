@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['parkplatz.gierse.tech', 'localhost', '81.169.218.230', '127.0.0.1']
+ALLOWED_HOSTS = ['parkplatz.gierse.tech', 'localhost', '127.0.0.1']
 
 
 LOGGING = {
