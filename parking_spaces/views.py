@@ -1,7 +1,8 @@
 import logging.config
+import time
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -18,9 +19,10 @@ log = logging.getLogger('file')
 @login_required()
 def dashboard_view(request):
     log.info(f"Generiere Übersicht für User {request.user}")
+    start = time.time()
     data_provider = ParkingSpaceStatusProvider(current_user=request.user)
     result = data_provider.load_data()
-
+    log.debug(f"Suchdauer {time.time() - start}")
     return render(request, "dashboard.html", context={"dates": get_list_of_relevant_dates(), "spaces": result,
                                                       "today": datetime.date.today()})
 

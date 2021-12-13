@@ -37,30 +37,33 @@ class ParkingSpaceStatusProvider:
         if date is None:
             date = datetime.date.today()
         self.today: datetime.date = date
-        self.active_parking_spaces: List[ParkingSpace] = ParkingSpace.objects.filter(valid_to__gt=self.today,
+        self.active_parking_spaces: List[ParkingSpace] = list(ParkingSpace.objects.filter(valid_to__gt=self.today,
                                                                                      valid_from__lte=self.today,
-                                                                                     deleted=False)
+                                                                                     deleted=False).prefetch_related('owner'))
         self.relevant_dates: List[datetime.date] = get_list_of_relevant_dates()
-        self.relevant_events: List[ParkingSpaceEvent] = ParkingSpaceEvent.objects.filter(date__in=self.relevant_dates,
-                                                                                         deleted=False)
+        self.relevant_events: List[ParkingSpaceEvent] = list(ParkingSpaceEvent.objects.filter(date__in=self.relevant_dates,
+                                                                                         deleted=False).prefetch_related('parking_space', 'user'))
         self.result_struct: List[ParkingSpaceStatusList] = []
+
+    def _find_in_relevant_events(self, date: datetime.date, status: str, user: User, parking_space_id: int = -1):
+        for event in self.relevant_events:
+            if event.date == date and event.status == status and event.user == user:
+                if parking_space_id == -1 or (event.parking_space_id == parking_space_id):
+                    return True
+
+        return False
 
     def _user_already_has_a_parking_space_booked(self, date: datetime.date) -> bool:
         for ps in self.active_parking_spaces:
             if ps.owner_id == self.current_user.id:
                 # Prüfe, ob der User seinen Parkplatz am betroffenen Tag angeboten hat. Falls ja, darf er prinzipiell
                 # einen anderen Platz buchen.
-                user_parking_space_is_free_query = ParkingSpaceEvent.objects.filter(user_id=self.current_user.id,
-                                                                                    date=date,
-                                                                                    parking_space_id=ps.id,
-                                                                                    status=ParkingSpaceEvent.FREE,
-                                                                                    deleted=False)
-                if not user_parking_space_is_free_query.exists():
+                user_parking_space_is_free_query = self._find_in_relevant_events(date, ParkingSpaceEvent.FREE, self.current_user, ps.id)
+                if not user_parking_space_is_free_query:
                     return True
 
-        booked_by_user_query = ParkingSpaceEvent.objects.filter(user_id=self.current_user.id, deleted=False, date=date,
-                                                                status=ParkingSpaceEvent.BOOKED_BY_USER)
-        if booked_by_user_query.exists():
+        booked_by_user = self._find_in_relevant_events(date, ParkingSpaceEvent.BOOKED_BY_USER, self.current_user)
+        if booked_by_user:
             return True
 
         return False
