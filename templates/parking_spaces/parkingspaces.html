@@ -34,6 +34,9 @@
           {% endfor %}
           </tbody>
         </table>
+    <div class="col-md-12 text-right">
+       <a role=button href="{% url 'parking_space_add' %}" class="btn btn-success">Weiteren Parkplatz hinzufügen</a>
+    </div>
     </div>
 {% else %}
     <p>Noch hast Du keine Parkplätze. Möchtest Du einen <a href="{% url 'parking_space_add' %}">anlegen</a>?</p>
