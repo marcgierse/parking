@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, ValidationError, EmailField
 
-from parking_spaces.models import ParkingSpace
+from parking_spaces.models import ParkingSpace, RecurringFreeingEvents
 
 
 class ParkingSpaceForm(ModelForm):
@@ -41,3 +41,9 @@ class UserCreationFormWithMail(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class RecurringFreeingsForm(ModelForm):
+    class Meta:
+        model = RecurringFreeingEvents
+        fields = ['mon', 'tue', 'wed', 'thu', 'fri']

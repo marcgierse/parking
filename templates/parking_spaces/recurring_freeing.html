@@ -1,0 +1,24 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Regemäßige Freigaben festlegen{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Regelmäßige Freigaben festlegen</h3>
+    <p>Auf dieser Seite können dauerhafte Freigaben eingerichtet und verwaltet werden. Dies ist zum Beispiel dann sinnvoll,
+        wenn regelmäßige Homeofficetage oder eine Teilzeitvereinbarung getroffen wurde. Regelmäßige manuelle Freigaben
+        sind dann nicht mehr notwendig.
+    </p>
+    <div class="alert alert-primary" role="alert">
+        Eine Änderung wirkt sich immer erst auf die übernächste Woche aus. Änderungen für die aktuelle oder nächste Woche müssen
+        auf der Übersichtsseite vorgenommen werden.
+    </div>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <div class="col-md-12 text-right">
+       <button type="submit" class="btn btn-success">Speichern</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,3 +1,6 @@
+import datetime
+from typing import List
+
 from django.conf import settings
 from django.db import models
 
@@ -47,4 +50,23 @@ class ParkingSpaceEvent(models.Model):
             return " - ".join(["deleted", self.parking_space.name, str(self.date), self.status, str(self.user)])
         return " - ".join([self.parking_space.name, str(self.date), self.status, str(self.user)])
 
+
+class RecurringFreeingEvents(models.Model):
+    parking_space = models.ForeignKey(to="ParkingSpace", on_delete=models.CASCADE)
+    mon = models.BooleanField(default=False, verbose_name="Montag")
+    tue = models.BooleanField(default=False, verbose_name="Dienstag")
+    wed = models.BooleanField(default=False, verbose_name="Mittwoch")
+    thu = models.BooleanField(default=False, verbose_name="Donnerstag")
+    fri = models.BooleanField(default=False, verbose_name="Freitag")
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    modified = models.DateTimeField(auto_now=True)
+
+    def find_dates_to_free(self, monday: datetime.date) -> List[datetime.date]:
+        result = []
+        days: List[bool] = [self.mon, self.tue, self.wed, self.thu, self.fri]
+        for i, d in enumerate(days):
+            if d:
+                result.append(monday + datetime.timedelta(days=i))
+
+        return result
 

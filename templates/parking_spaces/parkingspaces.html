@@ -23,11 +23,14 @@
                   <td>{{ parkingspace.valid_from }}</td>
                   <td>{{ parkingspace.valid_to }}</td>
                   <td>
-                      <a class="btn btn-info btn-sm" href="{% url 'parking_space_edit' parking_space=parkingspace.id %}">
+                      <a class="btn btn-info btn-sm" href="{% url 'parking_space_edit' parking_space_id=parkingspace.id %}">
                         <i class="bi bi-pen"></i>
                       </a>
-                      <a class="btn btn-danger btn-sm" href="{% url 'parking_space_delete' parking_space=parkingspace.id %}">
+                      <a class="btn btn-danger btn-sm" href="{% url 'parking_space_delete' parking_space_id=parkingspace.id %}">
                         <i class="bi bi-trash"></i>
+                      </a>
+                      <a class="btn btn-primary btn-sm" href="{% url 'manage_recurrings' parking_space_id=parkingspace.id %}">
+                        Regelmäßige Freigaben
                       </a>
                   </td>
               </tr>

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.BooleanField(default=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('parking_space', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='parking_spaces.parkingspace')),
+                ('parking_space_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='parking_spaces.parkingspace')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
