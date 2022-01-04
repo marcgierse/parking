@@ -182,7 +182,7 @@ def manage_recurring_freeings(request, parking_space_id):
         form = RecurringFreeingsForm(request.POST, instance=rf)
         if form.is_valid():
             form.save()
-        return redirect('manage_recurrings', parking_space_id)
+        return redirect('parking_space')
     else:
         form = RecurringFreeingsForm(instance=rf)
     return render(request, 'parking_spaces/recurring_freeing.html', {'form': form})
