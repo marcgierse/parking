@@ -35,9 +35,9 @@
                         {% if s.action == "BOOK" %}
                             <td><a class="btn btn-primary btn-sm" href="{% url 'book' date=s.date parking_space_id=ps.parking_space_info.id %}" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
                         {% elif s.action == "DELETE" %}
-                            <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>Freigabe</a></td>
+                            <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button">Frei <i class="bi bi-trash"></i></a></td>
                         {% elif request.user == ps.parking_space_info.owner %}
-                            <td><a class="btn btn-danger btn-sm disabled" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>Freigabe</a></td>
+                            <td><a class="btn btn-danger btn-sm disabled" href="{% url 'delete' event_id=s.latest_event.id %}" role="button">Frei <i class="bi bi-trash"></i></a></td>
                         {% else %}
                             <td><a class="btn btn-primary btn-sm disabled" href="" role="button"><i class="bi bi-pencil-square"></i> Buchen</a></td>
                         {% endif %}
@@ -45,7 +45,7 @@
                         {% if s.action == "RECLAIM" %}
                             <td><a class="btn btn-warning btn-sm" href="{% url 'reclaim' date=s.date parking_space_id=ps.parking_space_info.id %}" role="button" title="Den Parkplatz von {{ s.latest_event.user.username }} zurückfordern.">{{ s.latest_event.user.username }} <i class="bi bi-x-circle"></i></a></td>
                         {% elif s.action == "DELETE" %}
-                            <td><a class="btn btn-danger btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button"><i class="bi bi-trash"></i>löschen</a></td>
+                            <td><a class="btn btn-success btn-sm" href="{% url 'delete' event_id=s.latest_event.id %}" role="button">Gebucht <i class="bi bi-trash"></i></a></td>
                         {% else %}
                             <td>{{ s.latest_event.user.username }}</td>
                         {% endif %}
