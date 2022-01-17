@@ -1,4 +1,4 @@
-#!venv/bin/python
+#!/home/pypark/venv/bin/python
 import os
 import datetime
 
