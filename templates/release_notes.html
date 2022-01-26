@@ -6,8 +6,16 @@
 {% block content %}
     <h3>Versionshinweise</h3>
     <p>Auf dieser Seite können die Änderungen und Fehlerbehebungen der jeweiligen Version eingesehen werden.</p>
+    <h4>Version 1.1.20220126</h4>
+    <div class="container"><b>Feature:</b>
+        <ul>
+            <li>Die Parkplatzbörse ist jetzt fähig verschiedene Parkplatzpools zu verwalten. Daher muss nun bei der Registrierung
+            von neuen Userinnen und Usern der jeweilige Pool ausgewählt werden.</li>
+            <li>Die Django-Version wurde von 3.2.10 auf 4.0.1 upgedatet.</li>
+        </ul>
+    </div>
     <h4>Version 1.0.20220104</h4>
-    <div><b>Fehlerbehebungen:</b>
+    <div class="container"><b>Fehlerbehebungen:</b>
         <ul>
             <li>Wenn "Regelmäßige Freigaben" erfasst wurden, gab es nach dem Speichern dieser kein Feedback. Jetzt wird
             man auf die Übersichtsseite der Parkplätze zurückgeleitet.</li>
@@ -16,7 +24,7 @@
         </ul>
     </div>
     <h4>Version 1.0.20220103</h4>
-    <div><b>Feature:</b>
+    <div class="container"><b>Feature:</b>
         <ul>
             <li>Über den Funktion "Regelmäßige Freigaben" können nun gewisse Wochentage automatisiert freigegeben werden,
             ohne dass manuelle Buchungen notwendig sind. Dies ist pro Parkplatz konfigurierbar und kann unter "Meine Parkplätze"
@@ -24,14 +32,14 @@
         </ul>
     </div>
     <h4>Version 1.0.20211214</h4>
-    <div><b>Fehlerbehebung:</b>
+    <div class="container"><b>Fehlerbehebung:</b>
         <ul>
             <li>Wenn ein Nutzer/eine Nutzerin schon einen Parkplatz angelegt hatte, fehlte in der eigenen Parkplatzübersicht
             der Button zum Anlegen eines weiteren Parkplatzes. Dieser ist nun vorhanden. </li>
         </ul>
     </div>
     <h4>Version 1.0.20211213</h4>
-    <div><b>Feature:</b>
+    <div class="container"><b>Feature:</b>
         <ul>
             <li>Auch ein/e Parkplatzbesitzer/in kann nun einen fremden Parkplatz buchen, wenn dieser freigegeben wurde.
                 Dafür muss der eigene Parkplatz dann aber freigegeben worden sein. Solange der andere Parkplatz von ihm/ihr
@@ -42,7 +50,7 @@
             <li>Die Zahl der Datenbankzugriffe bei der Generierung der Übersicht wurde signifikant reduziert</li>
         </ul>
     </div>
-    <div><b>Fehlerbehebung:</b>
+    <div class="container"><b>Fehlerbehebung:</b>
         <ul>
             <li>Das Passwort wurde nicht korrekt gespeichert. Der Fehler wurde korrigiert.</li>
             <li>Nach einer Passwortänderung wurde auf die falsche Seite verlinkt.</li>

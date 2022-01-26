@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'parking_spaces',
+    'account',
+    'recurring_freeings',
     'crispy_forms',
 ]
 
@@ -170,4 +172,4 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS"))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-APP_VERSION = '1.0.20220104'
+APP_VERSION = '1.1.20220126'

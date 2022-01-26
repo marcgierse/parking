@@ -2,7 +2,7 @@ import dataclasses
 import datetime
 from typing import Optional, List
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from parking_spaces.models import ParkingSpace, ParkingSpaceEvent
 
@@ -37,13 +37,25 @@ class ParkingSpaceStatusProvider:
         if date is None:
             date = datetime.date.today()
         self.today: datetime.date = date
-        self.active_parking_spaces: List[ParkingSpace] = list(ParkingSpace.objects.filter(valid_to__gt=self.today,
-                                                                                     valid_from__lte=self.today,
-                                                                                     deleted=False).prefetch_related('owner'))
+        self._load_active_parking_spaces()
         self.relevant_dates: List[datetime.date] = get_list_of_relevant_dates()
-        self.relevant_events: List[ParkingSpaceEvent] = list(ParkingSpaceEvent.objects.filter(date__in=self.relevant_dates,
-                                                                                         deleted=False).prefetch_related('parking_space', 'user'))
+        self.relevant_events: List[ParkingSpaceEvent] = list(
+            ParkingSpaceEvent.objects.filter(date__in=self.relevant_dates,
+                                             deleted=False).prefetch_related('parking_space', 'user'))
         self.result_struct: List[ParkingSpaceStatusList] = []
+
+    def _load_active_parking_spaces(self):
+        if self.current_user.groups.exists():
+            grp = self.current_user.groups.first()
+            user_in_group = User.objects.filter(groups=grp).all()
+        else:
+            user_in_group = User.objects.all()
+
+        self.active_parking_spaces: List[ParkingSpace] = list(ParkingSpace.objects.filter(valid_to__gt=self.today,
+                                                                                          valid_from__lte=self.today,
+                                                                                          owner__in=user_in_group,
+                                                                                          deleted=False).prefetch_related(
+            'owner'))
 
     def _find_in_relevant_events(self, date: datetime.date, status: str, user: User, parking_space_id: int = -1):
         for event in self.relevant_events:
@@ -58,7 +70,8 @@ class ParkingSpaceStatusProvider:
             if ps.owner_id == self.current_user.id:
                 # Prüfe, ob der User seinen Parkplatz am betroffenen Tag angeboten hat. Falls ja, darf er prinzipiell
                 # einen anderen Platz buchen.
-                user_parking_space_is_free_query = self._find_in_relevant_events(date, ParkingSpaceEvent.FREE, self.current_user, ps.id)
+                user_parking_space_is_free_query = self._find_in_relevant_events(date, ParkingSpaceEvent.FREE,
+                                                                                 self.current_user, ps.id)
                 if not user_parking_space_is_free_query:
                     return True
 
@@ -100,8 +113,6 @@ class ParkingSpaceStatusProvider:
             return None
 
         event_query.sort(key=lambda x: x.modified)
-        if len(event_query) > 1:
-            print(event_query)
         latest_event = event_query[-1]
 
         return latest_event

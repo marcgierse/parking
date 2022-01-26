@@ -1,8 +1,8 @@
 import datetime
 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.forms import ModelForm, ValidationError, EmailField
+from django.contrib.auth.models import User, Group
+from django.forms import ModelForm, ValidationError, EmailField, ModelChoiceField
 
 from parking_spaces.models import ParkingSpace, RecurringFreeingEvents
 
@@ -30,6 +30,7 @@ class ParkingSpaceForm(ModelForm):
 
 class UserCreationFormWithMail(UserCreationForm):
     email = EmailField(required=True, help_text="Die Mailadresse wird nur zum Zusenden wichtiger Infos benötigt.")
+    group = ModelChoiceField(required=True, queryset=Group.objects.all(), help_text="Zu welchem Parkplatzpool möchten Sie sich anmelden?", label="Parkplatzpool")
 
     class Meta:
         model = User
@@ -40,6 +41,7 @@ class UserCreationFormWithMail(UserCreationForm):
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
+        user.groups.add(self.cleaned_data["group"])
         return user
 
 
