@@ -10,6 +10,7 @@
         <table class="table table-bordered">
           <thead>
             <tr>
+                <th>Aktiv</th>
                 <th>Name</th>
                 <th>von</th>
                 <th>bis</th>
@@ -19,6 +20,11 @@
           <tbody>
           {% for parkingspace in ps %}
               <tr>
+                {% if parkingspace.valid_from > today or parkingspace.valid_to < today %}
+                    <td><a class="btn btn-danger btn-sm" title="Der Parkplatz steht noch nicht, oder nicht mehr zur Verfügung."><i class="bi bi-dash-circle"></i></a></td>
+                    {% else %}
+                    <td><a class="btn btn-success btn-sm" title="Der Parkplatz ist aktiv."><i class="bi bi-check-circle"></i></a></td>
+                  {% endif %}
                   <td>{{ parkingspace.name }}</td>
                   <td>{{ parkingspace.valid_from }}</td>
                   <td>{{ parkingspace.valid_to }}</td>
