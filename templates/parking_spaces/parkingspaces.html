@@ -54,4 +54,15 @@
     <p>Noch hast Du keine Parkplätze. Möchtest Du einen <a href="{% url 'parking_space_add' %}">anlegen</a>?</p>
 {% endif %}
 
+{% if reps %}
+    <hr>
+    <h3>Vertretungen</h3>
+        Für folgende Parkplätze bist Du als Vertretung eingetragen:<br>
+        <ul>
+            {% for r in reps %}
+                <li>{{ r.parking_space.name }} von {{ r.parking_space.owner }}</li>
+            {% endfor %}
+        </ul>
+
+{% endif %}
 {% endblock %}

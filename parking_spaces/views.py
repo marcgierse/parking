@@ -151,7 +151,8 @@ def release_notes(request):
 def parkingspaces(request):
     today = datetime.date.today()
     ps = ParkingSpace.objects.filter(owner=request.user, deleted=False)
-    return render(request, "parking_spaces/parkingspaces.html", {"ps": ps, "today": today})
+    reps = ParkingSpaceRepresentative.objects.filter(user=request.user, deleted=False)
+    return render(request, "parking_spaces/parkingspaces.html", {"ps": ps, "today": today, "reps": reps})
 
 
 @login_required()
