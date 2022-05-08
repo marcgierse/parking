@@ -3,8 +3,19 @@ import datetime
 from typing import Optional, List
 
 from django.contrib.auth.models import User, Group
+from django.db.models import QuerySet
 
-from parking_spaces.models import ParkingSpace, ParkingSpaceEvent
+from parking_spaces.models import ParkingSpace, ParkingSpaceEvent, ParkingSpaceRepresentative
+
+
+def find_users_of_same_group(user: User) -> QuerySet:
+    if user.groups.exists():
+        grp = user.groups.first()
+        user_in_group = User.objects.filter(groups=grp).all()
+    else:
+        user_in_group = User.objects.all()
+
+    return user_in_group
 
 
 def get_list_of_relevant_dates(number_of_weeks=2):
@@ -38,6 +49,9 @@ class ParkingSpaceStatusProvider:
             date = datetime.date.today()
         self.today: datetime.date = date
         self._load_active_parking_spaces()
+        self.representatives: List[ParkingSpaceRepresentative] = list(
+            ParkingSpaceRepresentative.objects.filter(deleted=False).prefetch_related('parking_space', 'user')
+        )
         self.relevant_dates: List[datetime.date] = get_list_of_relevant_dates()
         self.relevant_events: List[ParkingSpaceEvent] = list(
             ParkingSpaceEvent.objects.filter(date__in=self.relevant_dates,
@@ -45,11 +59,7 @@ class ParkingSpaceStatusProvider:
         self.result_struct: List[ParkingSpaceStatusList] = []
 
     def _load_active_parking_spaces(self):
-        if self.current_user.groups.exists():
-            grp = self.current_user.groups.first()
-            user_in_group = User.objects.filter(groups=grp).all()
-        else:
-            user_in_group = User.objects.all()
+        user_in_group = find_users_of_same_group(self.current_user)
 
         self.active_parking_spaces: List[ParkingSpace] = list(ParkingSpace.objects.filter(valid_to__gt=self.today,
                                                                                           valid_from__lte=self.today,
@@ -57,10 +67,10 @@ class ParkingSpaceStatusProvider:
                                                                                           deleted=False).prefetch_related(
             'owner'))
 
-    def _find_in_relevant_events(self, date: datetime.date, status: str, user: User, parking_space_id: int = -1):
+    def _find_in_relevant_events(self, date: datetime.date, status: str, user: User = None, parking_space_id: int = -1):
         for event in self.relevant_events:
-            if event.date == date and event.status == status and event.user == user:
-                if parking_space_id == -1 or (event.parking_space_id == parking_space_id):
+            if event.date == date and event.status == status:
+                if (user is None or event.user == user) and (parking_space_id == -1 or (event.parking_space_id == parking_space_id)):
                     return True
 
         return False
@@ -71,7 +81,7 @@ class ParkingSpaceStatusProvider:
                 # Prüfe, ob der User seinen Parkplatz am betroffenen Tag angeboten hat. Falls ja, darf er prinzipiell
                 # einen anderen Platz buchen.
                 user_parking_space_is_free_query = self._find_in_relevant_events(date, ParkingSpaceEvent.FREE,
-                                                                                 self.current_user, ps.id)
+                                                                                 None, ps.id)
                 if not user_parking_space_is_free_query:
                     return True
 
@@ -125,10 +135,14 @@ class ParkingSpaceStatusProvider:
             return ""
 
         current_user_is_owner = parking_space.owner_id == self.current_user.id
+        current_user_is_repr = len({r.user_id for r in self.representatives
+                                    if
+                                    r.user_id == self.current_user.id and r.parking_space_id == parking_space.id}) > 0
+        current_user_is_owner_or_repr = current_user_is_repr or current_user_is_owner
         user_already_has_a_parking_space_booked = self._user_already_has_a_parking_space_booked(date)
         # None heißt keine Buchung -> Nur der Besitzer kann freigeben
         if current_status is None:
-            if current_user_is_owner:
+            if current_user_is_owner_or_repr:
                 return "FREE"
             else:
                 return ""
@@ -154,7 +168,9 @@ class ParkingSpaceStatusProvider:
         # falls ein User gebucht hat, kann der Besitzer den Platz zurückfordern, der buchende User kann den Platz wieder
         # freigaben - alle anderen können nichts tun.
         if current_status.status == ParkingSpaceEvent.BOOKED_BY_USER:
-            if current_user_is_owner:
+            if not current_user_is_owner and self.current_user.id == current_status.user_id:
+                return "DELETE"
+            elif current_user_is_owner_or_repr:
                 # Falls der Besitzer einen anderen Parkplatz gebucht hat, kann er den Platz nicht zurückfordern, dafür
                 # muss er zunächst den anderen Parkplatz aufgeben.
                 if user_already_has_a_parking_space_booked:

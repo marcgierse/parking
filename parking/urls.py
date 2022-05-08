@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 from parking_spaces.views import dashboard_view, booking, freeing, delete_event, signup, release_notes, \
-    add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim, help_page, manage_recurring_freeings
+    add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim, help_page, \
+    manage_recurring_freeings, manage_representatives, delete_parkingspace_representative
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,10 +28,13 @@ urlpatterns = [
     path('parking_space/<int:parking_space_id>/edit', edit_parkingspace, name="parking_space_edit"),
     path('parking_space/<int:parking_space_id>/delete', delete_parkingspace, name="parking_space_delete"),
     path('parking_space/<int:parking_space_id>/recurring_frees', manage_recurring_freeings, name="manage_recurrings"),
+    path('parking_space/<int:parking_space_id>/representatves', manage_representatives, name="manage_representatives"),
     path('parking_space/<int:parking_space_id>/<str:date>/free', freeing, name="free"),
     path('parking_space/<int:parking_space_id>/<str:date>/book', booking, name="book"),
     path('parking_space/<int:parking_space_id>/<str:date>/reclaim', reclaim, name="reclaim"),
     path('parking_space_event/<int:event_id>/delete', delete_event, name="delete"),
+    path('parking_space_representative/<int:rep_id>/delete', delete_parkingspace_representative,
+         name="delete_representative"),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup', signup, name="signup"),
     path('hilfe', help_page, name="help"),

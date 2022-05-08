@@ -6,6 +6,9 @@
 
 {% block content %}
 <h3>Neuen Parkplatz anlegen</h3>
+    <p>Für die Benennung des Parkplatzes empfiehlt sich folgendes Schema: Ux/abc für Tiefgaragenplätze, also z.B. U4/123.
+        Für Stellplätze auf dem Mitarbeiterparkplatz genügt die einfache Angabe der Nummer, zum Beispiel 501. Der Name
+    des/der Parkplatzbesitzer/in wird automatisch mit in der Übersicht angezeigt, er muss also nicht Teil des Parkplatznamens sein. </p>
 <form method="post" class="form-group">
     {% csrf_token %}
     {{ form | crispy }}

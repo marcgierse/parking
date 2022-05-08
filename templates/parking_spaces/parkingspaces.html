@@ -36,7 +36,10 @@
                         <i class="bi bi-trash"></i>
                       </a>
                       <a class="btn btn-primary btn-sm" href="{% url 'manage_recurrings' parking_space_id=parkingspace.id %}">
-                        Regelmäßige Freigaben
+                        <i class="bi bi-calendar3"></i> Regelmäßige Freigaben
+                      </a>
+                      <a class="btn btn-primary btn-sm" href="{% url 'manage_representatives' parking_space_id=parkingspace.id %}">
+                        <i class="bi bi-person-square"></i> Vertretungen
                       </a>
                   </td>
               </tr>

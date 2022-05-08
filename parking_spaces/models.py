@@ -62,6 +62,13 @@ class RecurringFreeingEvents(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def find_dates_to_free(self, monday: datetime.date) -> List[datetime.date]:
+        """
+            Zum übergebenen Wochenstart (monday) werden alle Tage zurückgegeben, die
+            aufgrund der Usereinstellungen freigegeben werden sollen.
+
+        :param monday: Wochenbeginn für den die regelmäßigen Freigaben erfolgen sollen.
+        :return: Liste mit Daten, an denen der Parkplatz freigegeben wird
+        """
         result = []
         days: List[bool] = [self.mon, self.tue, self.wed, self.thu, self.fri]
         for i, d in enumerate(days):
@@ -70,3 +77,18 @@ class RecurringFreeingEvents(models.Model):
 
         return result
 
+
+class ParkingSpaceRepresentative(models.Model):
+    parking_space = models.ForeignKey(to="ParkingSpace", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, verbose_name="Vertretung durch")
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    modified = models.DateTimeField(auto_now=True)
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.deleted:
+            return " - ".join(["deleted", self.parking_space.name, str(self.user)])
+        else:
+            return " - ".join([self.parking_space.name, str(self.user)])

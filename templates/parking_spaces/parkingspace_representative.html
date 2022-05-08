@@ -1,0 +1,48 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Vertreter/in für Parkplatz festlegen{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h3>Vertreter/in für Parkplatz festlegen</h3>
+    <p>Auf dieser Seite können ein Vertreter, eine Vertreterin für einen Parkplatz festgelegt werden. Diese/r kann ebenfalls
+        Freigaben vornehmen. Dies ist insbesondere für längere Abwesenheiten gedacht, in denen der Parkplatz vorwiegend
+        vom Vertreter/ von der Vertreterin genutz wird.
+    </p>
+
+    {% if reps %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+                <th>Vertretung</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for rep in reps %}
+              <tr>
+                  <td>{{ rep.user }}</td>
+                  <td>
+                      <a class="btn btn-danger btn-sm" href="{% url 'delete_representative' rep.id %}">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                  </td>
+              </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Bislang sind keine Vertreterregelungen aktiv.</p>
+{% endif %}
+
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <div class="col-md-12 text-right">
+       <button type="submit" class="btn btn-success">Speichern</button>
+    </div>
+</form>
+{% endblock %}
