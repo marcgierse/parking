@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import platform
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -24,10 +25,10 @@ load_dotenv(os.path.join(BASE_DIR, "settings.env"))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['parkplatz.gierse.tech', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['parkplatz.gierse.tech', 'parken.gierse.org', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://parken.gierse.org']
 
 LOGGING = {
     'version': 1,
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     'account',
     'recurring_freeings',
     'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -172,4 +174,4 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS"))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-APP_VERSION = '1.1.20220506'
+APP_VERSION = '1.2.20230527'

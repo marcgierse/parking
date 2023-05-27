@@ -34,7 +34,8 @@ def freeing(request, parking_space_id, date):
     already_exists = ParkingSpaceEvent.objects.filter(parking_space_id=parking_space_id, date=date,
                                                       status=ParkingSpaceEvent.FREE, deleted=False)
     if already_exists.exists():
-        log.warning(f"Freigabe nicht möglich! Es gibt bereits einen Datensatz, der den Parkplatz in dieser Situation freigibt.")
+        log.warning(
+            f"Freigabe nicht möglich! Es gibt bereits einen Datensatz, der den Parkplatz in dieser Situation freigibt.")
         for e in already_exists:
             log.warning(f"  {e}")
         return redirect("dashboard")
@@ -58,8 +59,10 @@ def reclaim(request, parking_space_id, date):
     user_is_owner = ps.owner == request.user
     if user_is_owner:
         log.debug("ermittle 'Freigabe' und 'Buchung'-Events")
-        booked_by_user_event = ParkingSpaceEvent.objects.get(parking_space_id=parking_space_id, date=date, status=ParkingSpaceEvent.BOOKED_BY_USER, deleted=False)
-        freed_by_owner = ParkingSpaceEvent.objects.get(parking_space_id=parking_space_id, date=date, status=ParkingSpaceEvent.FREE, deleted=False)
+        booked_by_user_event = ParkingSpaceEvent.objects.get(parking_space_id=parking_space_id, date=date,
+                                                             status=ParkingSpaceEvent.BOOKED_BY_USER, deleted=False)
+        freed_by_owner = ParkingSpaceEvent.objects.get(parking_space_id=parking_space_id, date=date,
+                                                       status=ParkingSpaceEvent.FREE, deleted=False)
         log.info(f"Setze das Löschflag bei {booked_by_user_event.id=} und {freed_by_owner.id=}")
         booked_by_user_event.deleted = True
         freed_by_owner.deleted = True
@@ -71,7 +74,8 @@ def reclaim(request, parking_space_id, date):
         # Wir sind im Fall, dass ein Vertreter den Reclaim angefragt hat. In diesem Fall, löschen wir die
         # 'booked'-Buchung und fügen eine neue vom anfordernen User hinzu.
         try:
-            rep = ParkingSpaceRepresentative.objects.get(parking_space_id=parking_space_id, user_id=request.user.id, deleted=False)
+            rep = ParkingSpaceRepresentative.objects.get(parking_space_id=parking_space_id, user_id=request.user.id,
+                                                         deleted=False)
         except ParkingSpaceRepresentative.DoesNotExist:
             log.error("reclaim wurde angefragt, von User, der kein Vertreter ist.")
 
@@ -249,3 +253,7 @@ def delete_parkingspace_representative(request, rep_id):
 
 def help_page(request):
     return render(request, 'help.html')
+
+
+def redirect_page(request):
+    return render(request, 'redirect.html')

@@ -18,7 +18,7 @@ from django.urls import path, include
 
 from parking_spaces.views import dashboard_view, booking, freeing, delete_event, signup, release_notes, \
     add_parkingspace, parkingspaces, edit_parkingspace, delete_parkingspace, reclaim, help_page, \
-    manage_recurring_freeings, manage_representatives, delete_parkingspace_representative
+    manage_recurring_freeings, manage_representatives, delete_parkingspace_representative, redirect_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,5 +38,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup', signup, name="signup"),
     path('hilfe', help_page, name="help"),
+    path('umzug', redirect_page, name="umzug"),
     path('release_notes', release_notes, name="release_notes"),
 ]
